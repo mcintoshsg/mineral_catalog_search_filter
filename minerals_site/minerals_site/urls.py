@@ -23,7 +23,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     url(r'^minerals/', include('minerals.urls', namespace='minerals')),
     url(r'^admin/', admin.site.urls),
-    url(r'^', views.mineral_list_inital_filter),    
+    url(r'^', views.mineral_list_inital_filter),
     ] 
 
 urlpatterns += staticfiles_urlpatterns()

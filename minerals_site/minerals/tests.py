@@ -50,6 +50,7 @@ mineral_data_2 = {
     "group": "Arsenates"
     }        
 
+# test the model
 class MineralModelTests(TestCase):
     ''' testing of the mineral model '''
     def setUp(self):
@@ -64,6 +65,7 @@ class MineralModelTests(TestCase):
         mineral = Mineral.objects.get(name="Abernathyite")
         self.assertEqual(mineral, self.mineral_2)
 
+#test the views
 class MineralViewsTest(TestCase):
     ''' testing the list and detail minerals views '''
     def setUp(self):
@@ -83,4 +85,14 @@ class MineralViewsTest(TestCase):
         self.assertEqual(self.mineral, resp.context['mineral'])
         self.assertTemplateUsed(resp, 'mineral/detail.html')
         self.assertContains(resp, self.mineral.name)
-  
+
+
+    def test_mineral_group_filter(self):
+        pass
+
+    def test_mineral_search(self):
+        pass
+        
+                
+
+# test the forms

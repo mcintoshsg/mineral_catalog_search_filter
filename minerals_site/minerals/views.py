@@ -16,17 +16,21 @@ def mineral_detail(request, pk):
     random_mineral = random.choice(minerals)
     mineral = get_object_or_404(Mineral, pk=pk)
     return render(request, 'minerals/detail.html',
-                  {'mineral' : mineral, 'random_mineral' : random_mineral})
+                  {'mineral': mineral, 'random_mineral': random_mineral})
+
 
 def mineral_list_letter_filter(request, letter):
     ''' create the list view of the mineral by a letter query'''
+    print(letter)
     if letter != 'ALL':
-         minerals = Mineral.objects.filter(name__startswith=letter)
+        minerals = Mineral.objects.filter(name__startswith=letter)
     else:
         minerals = Mineral.objects.all()
     random_mineral = random.choice(minerals)
     return render(request, 'minerals/index.html',
-        {'minerals': minerals, 'random_mineral' : random_mineral})
+                  {'minerals': minerals,
+                   'random_mineral': random_mineral})
+
 
 def search_minerals(request):
     ''' create the search view  '''
@@ -37,58 +41,67 @@ def search_minerals(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             data = request.POST.get('search_query')
-            if data:
-                mineral = Mineral.objects.filter(name=data)
-                if not mineral.count():
-                    message = 'Mineral matching query does not exist'
-                    messages.info(request, message, fail_silently=True)
-                else:
-                    minerals = Mineral.objects.all()
-                    random_mineral = random.choice(minerals)
-                    return render(request, 'minerals/detail.html',
-                                  {'mineral' : mineral[0],
-                                   'messages' : messages,
-                                   'random_mineral' : random_mineral})
+            mineral = Mineral.objects.filter(name=data)
+            if not mineral.count():
+                message = 'Mineral matching query does not exist!'
+                messages.info(request, message, fail_silently=True)
+                return HttpResponseRedirect(reverse('minerals:letter_filter',
+                                                    args=letter_q))
             else:
-                message = 'You did not enter a serach criteria'
+                minerals = Mineral.objects.all()
+                random_mineral = random.choice(minerals)
+                return render(request, 'minerals/detail.html',
+                              {'mineral': mineral[0],
+                               'random_mineral': random_mineral})
+        else:
+            message = 'Error occured on form!'
             messages.info(request, message, fail_silently=True)
-            return HttpResponseRedirect(
-                reverse('minerals:letter_filter',
-                        args=letter_q))
+            return HttpResponseRedirect(reverse('minerals:letter_filter',
+                                                args=letter_q))
     else:
-        form = SearchForm()
-        minerals = Mineral.objects.all()
-        random_mineral = random.choice(minerals)
-        return render(request, 'minerals/index.html',
-                      {'minerals' : minerals,
-                       'random_mineral' : random_mineral,
-                       'messages' : messages,
-                       'form': form})
+        return HttpResponseRedirect(reverse('minerals:letter_filter',
+                                            args=letter_q))
+
 
 def mineral_list_group_filter(request):
-    ''' create the list view of the mineral by selected group'''
-    form = FilterForm()
-    if request.method == 'POST':
-        if form.is_valid():
-            data = request.POST.data
-            minerals_by_group = Mineral.objects.filter(group=data)
+    ''' mineral gorup filter view '''
+    letter_q = 'B'
+    print('ajax')
+    message = 'Ajax worked'
+    messages.info(request, message, fail_silently=True)
+    return HttpResponseRedirect(reverse('minerals:letter_filter',
+                                        args=letter_q))
+    # print('message')
+    # if request.is_ajax():
+    #     message = "Yes, AJAX!"
+    # else:
+    #     message = "Not Ajax"
+    # return HttpResponse(message)
+    # ''' create the list view of the mineral by selected group'''
+    # form = FilterForm()
+    # print('here')
+    # if request.method == 'POST':
+    #     print('here')
+    #     if form.is_valid():
+    #         data = request.GET.get('group')
+    #         minerals_by_group = Mineral.objects.filter(group=data)
             
-            minerals = Mineral.objects.all()
-            random_mineral = random.choice(minerals)
+    #         minerals = Mineral.objects.all()
+    #         random_mineral = random.choice(minerals)
 
-            return render(request, 'minerals/index.html',
-                          {'minerals': minerals_by_group, 
-                          'random_mineral' : random_mineral}
-                          )
-        else:
-            print('error occured on form')
-    else:
-        minerals = Mineral.objects.all()
-        random_mineral = random.choice(minerals)
+    #         return render(request, 'minerals/index.html',
+    #                       {'minerals': minerals_by_group, 
+    #                       'random_mineral' : random_mineral}
+    #                       )
+    #     else:
+    #         print('error occured on form')
+    # else:
+    #     minerals = Mineral.objects.all()
+    #     random_mineral = random.choice(minerals)
 
-        return render(request, 'minerals/index.html',
-                      {'minerals': minerals_by_group, 
-                       'random_mineral' : random_mineral}
-                      )
+    #     return render(request, 'minerals/index.html',
+    #                   {'minerals': minerals_by_group, 
+    #                    'random_mineral' : random_mineral}
+    #                   )
     
     
