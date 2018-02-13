@@ -30,5 +30,5 @@ class Mineral(models.Model):
         ''' order the mineral claass based on the name '''
         ordering = ['name']
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name

@@ -3,16 +3,22 @@
 
 
 {% block content %}
-  
-       <div class="grid-100">
-          <ul class="minerals__container">
-            {% for mineral in minerals %}
-                <li class="minerals__item">
-                  <a class="minerals__anchor" href="{% url 'minerals:detail' pk=mineral.pk %}">{{ mineral.name }}</a>
-                </li>
-            {% endfor %}
-          </ul>
-        </div>
+
+{% if group %}
+    <div class="grid-100">
+         <h3 class="text-centered">Mineral Group : {{ group }}</h3>
+    </div> 
+{% endif %}
+
+<div class="grid-100">
+  <ul class="minerals__container">
+    {% for mineral in minerals %}
+        <li class="minerals__item">
+          <a class="minerals__anchor" href="{% url 'minerals:detail' pk=mineral.pk %}">{{ mineral.name }}</a>
+        </li>
+    {% endfor %}
+  </ul>
+</div>
   
 </div>
   <div class="minerals__random">

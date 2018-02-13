@@ -19,7 +19,7 @@
     <body>
     <div class="bounds">
         <div class="grid-100">
-            <a href="{% url 'minerals:letter_filter' letter='ALL' %}">
+            <a href="{% url 'minerals:letter_filter' letter='A' %}">
                 <svg class="logo" viewBox="0 0 127.6 84.8" preserveAspectRation="xMinYMin meet">
                 <polygon points="42.7,84.8 49.6,79.4 40,62.5 51.2,43.5 51.2,43.5 25,0 0,55.6 "/>
                 <polygon class="logo--middle" points="52.9,79.5 52.9,79.5 84.8,80.1 59.7,35 43.3,62.4 "/>
@@ -65,7 +65,7 @@
                         </form>
                     </div>  
                     <div class="col-sm-4">
-                        <form class="form" method="GET" action="{% url 'minerals:group_filter'%}">
+                        <form class="form">
                             {% csrf_token %}
                             {% filter_form %}
                         </form>

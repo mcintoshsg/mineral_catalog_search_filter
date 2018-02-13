@@ -34,25 +34,7 @@ $(document).ready(function() {
         $("#id_group_choice_field").change(function () { 
                 var vGroupItem = document.getElementById('id_group_choice_field');
                 var vGroupItemText = vGroupItem.options[vGroupItem.selectedIndex].innerHTML;    
-                alert(vGroupItemText + " ajax")
-                var form = $(this).closest("form");
-                $.ajax({
-               
-                        url: form.attr("action"), // the endpoint
-                        type : "GET", // http method
-                        data: {'group': vGroupItemText}, // data sent via GET
-                        dataType: 'json',
-                        success : function(data) {
-                                console.log(data); // log the returned json to the console
-                                console.log("success"); // another sanity check
-                        },
-
-                        // handle a non-successful response
-                        error : function(xhr,errmsg,err) {
-                                $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-                                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-                                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-                        }
-                });        
+                url = '/minerals/'.concat(vGroupItemText);
+                window.location.href = url;
         });
 });

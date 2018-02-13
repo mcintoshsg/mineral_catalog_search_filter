@@ -2,8 +2,22 @@
 
 from django import forms
 
-GROUP_CHOICES = [(1, 'Silicates'), (2, 'Oxides'), (3, 'Sulfates')]
-                 
+GROUP_CHOICES = [(-1, ''),
+                 (1, 'Silicates'),
+                 (2, 'Oxides'),
+                 (3, 'Sulfates'),
+                 (4, 'Sulfides'),
+                 (5, 'Carbonates'),
+                 (6, 'Halides'),
+                 (7, 'Sulfosalts'),
+                 (8, 'Phosphates'),
+                 (9, 'Borates'),
+                 (10, 'Organic Minerals'),
+                 (11, 'Arsenates'),
+                 (12, 'Native Elements'),
+                 (13, 'Other')
+                 ]
+
 
 class SearchForm(forms.Form):
     ''' search form for the minerals catalog '''
