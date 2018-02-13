@@ -2,7 +2,7 @@
 
 from django import forms
 
-GROUP_CHOICES = [(-1, ''),
+GROUP_CHOICES = [(-1, '--- group select ---'),
                  (1, 'Silicates'),
                  (2, 'Oxides'),
                  (3, 'Sulfates'),

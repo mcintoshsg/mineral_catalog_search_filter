@@ -29,11 +29,11 @@
              </a>
              <h4 class="text-centered">They're not rocks</h4>
              {% if messages %}
-                <ul class="messages">
+                <div class="alert alert-primary" role="alert">
                     {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        <h5 class="text-centered" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h5>
                     {% endfor %}
-                </ul>
+                </div>
             {% endif %}
         </div> 
 
@@ -70,13 +70,9 @@
                             {% filter_form %}
                         </form>
                     </div>
-                <!-- <div class="col-sm-2"></div> -->
             </div> 
         </div>  
-        
-        
-
-
+    
         {% block content %}{% endblock %}
        
         <script src="https://code.jquery.com/jquery-3.3.1.js"   integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="   crossorigin="anonymous"></script>

@@ -25,10 +25,10 @@ class Mineral(models.Model):
     crystal_habit = models.CharField(max_length=255, blank=True, default='')
     specific_gravity = models.CharField(max_length=255, blank=True, default='')
     group = models.CharField(max_length=255, blank=True, default='')
- 
+
     class Meta:
         ''' order the mineral claass based on the name '''
         ordering = ['name']
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.name
