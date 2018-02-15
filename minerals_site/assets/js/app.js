@@ -29,7 +29,7 @@ function getCookie(name) {
     });
 
 
-
+// extract the mineral group from tne dropdown and submit the URL
 $(document).ready(function() {
         $("#id_group_choice_field").change(function () { 
                 var vGroupItem = document.getElementById('id_group_choice_field');

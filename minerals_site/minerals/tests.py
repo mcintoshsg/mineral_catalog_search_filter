@@ -1,9 +1,6 @@
-''' unitests for our apps model and views.
-
-The following module is tests out the creation of the Mineral model and the
-created views
+''' unitests for our apps model, views, forms and templatetags.
 '''
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
 
 from .models import Mineral
@@ -48,7 +45,8 @@ mineral_data_2 = {
     "optical_properties": "Uniaxial (-)",
     "refractive_index": "nω = 1.597 – 1.608nε = 1.570",
     "group": "Arsenates"
-    }        
+    }
+
 
 # test the model
 class MineralModelTests(TestCase):
@@ -56,7 +54,7 @@ class MineralModelTests(TestCase):
     def setUp(self):
         ''' setup up dummy data in our model '''
         self.mineral_1 = Mineral.objects.create(**mineral_data_1)
-        self.mineral_2 = Mineral.objects.create(**mineral_data_2)    
+        self.mineral_2 = Mineral.objects.create(**mineral_data_2)
 
     def test_mineral_creation(self):
         ''' test out the creation of our model '''
@@ -65,34 +63,75 @@ class MineralModelTests(TestCase):
         mineral = Mineral.objects.get(name="Abernathyite")
         self.assertEqual(mineral, self.mineral_2)
 
-#test the views
+
+# test the views
 class MineralViewsTest(TestCase):
     ''' testing the list and detail minerals views '''
     def setUp(self):
         self.mineral = Mineral.objects.create(**mineral_data_1)
-        
-    def test_mineral_list_view(self):
-        resp = self.client.get(reverse('minerals:list'))
-        self.assertEqual(resp.status_code, 200)
-        self.assertIn(self.mineral, resp.context['minerals'])
-        self.assertTemplateUsed(resp, 'minerals/index.html')
-        self.assertContains(resp, self.mineral.name)
-     
-    def test_course_detail_view(self):
-        resp = self.client.get(reverse('minerals:detail',
-                                       kwargs={'pk': self.mineral.pk}))
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(self.mineral, resp.context['mineral'])
-        self.assertTemplateUsed(resp, 'mineral/detail.html')
-        self.assertContains(resp, self.mineral.name)
 
+    def test_mineral_detail_view(self):
+        response = self.client.get(reverse('minerals:detail',
+                                   kwargs={'pk': self.mineral.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.mineral, response.context['mineral'])
+        self.assertTemplateUsed(response, 'minerals/detail.html')
+        self.assertContains(response, self.mineral.name)
 
-    def test_mineral_group_filter(self):
-        pass
+    def test_mineral_list_by_letter_view(self):
+        ''' tests:
+            1. test the page loads with the correct minerals by letter
+        '''
+        test = '<a class="minerals__anchor" href="/minerals/1/">Abelsonite</a>'
+        response = self.client.get(reverse('minerals:letter_filter',
+                                   kwargs={'letter': 'A'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'minerals/index.html')
+        self.assertContains(response, test)
 
-    def test_mineral_search(self):
-        pass
-        
-                
+    def test_mineral_list_by_letter__fail_view(self):
+        ''' tests:
+            1. test a letter with no response informs user
+        '''
+        response = self.client.get(reverse('minerals:letter_filter',
+                                   kwargs={'letter': 'Q'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'minerals/index.html')
+        self.assertContains(response, 'Minerals matching query do not exist!')   
 
-# test the forms
+    def test_mineral_group_filter_view(self):
+        ''' tests:
+            1. test that the page loads with the correct group
+        '''
+        test = '<h3 class="text-centered">Mineral Group : Oxides</h3>'
+        response = self.client.get(reverse('minerals:group_filter',
+                                   kwargs={'group': 'Oxides'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'minerals/index.html')
+        self.assertContains(response, test)
+
+    def test_mineral_search_pass_view(self):
+        ''' tests
+            1. Test for a good responseonse - i.e Mineral exists
+        '''
+        search = "Abelsonite"
+        test = '<h1 class="mineral__name">Abelsonite</h1>'
+
+        response = self.client.post('/minerals/', {'search_query': search})
+        self.assertTemplateUsed(response, 'minerals/detail.html')
+        self.assertContains(response, test)
+
+    def test_mineral_search_fail_view(self):
+        ''' tests
+            1. Test for a bad response - i.e Mineral does not exists
+        '''
+        search = "Aaskjdhaj"
+        test = 'Mineral matching search does not exist!'
+
+        response = self.client.post('/minerals/', {'search_query': search})
+        self.assertRedirects(response, '/minerals/A',
+                             fetch_redirect_response=False
+                             )
+        response = self.client.get('/minerals/A')                     
+        self.assertContains(response, test)
+
